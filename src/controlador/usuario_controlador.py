@@ -4,7 +4,7 @@ from src.comun.utilidades import db
 from sqlalchemy.orm.exc import NoResultFound
 from src.comun.utilidades import api
 from marshmallow import ValidationError
-from flask_jwt_extended import jwt_required 
+from src.seguridad.seguridad import rol_requerido, ADMINISTRADOR
 
 #importaciones del usuario
 from src.modelo.usuario_modelo import UsuarioModelo
@@ -15,7 +15,7 @@ import bcrypt
 
 class UsuarioControlador(Resource):
 
-    @jwt_required()
+    @rol_requerido(ADMINISTRADOR)
     @api.expect(usuario_documentacion)
     def post(self):
         try:
@@ -46,7 +46,7 @@ class UsuarioControlador(Resource):
             print(err)
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
 
-    @jwt_required()
+    @rol_requerido(ADMINISTRADOR)
     @api.expect(usuario_documentacion)
     def put(self):
         try:
@@ -59,7 +59,8 @@ class UsuarioControlador(Resource):
             usuario_db.nombre = usuario.nombre
             usuario_db.apellido = usuario.apellido
             usuario_db.correo = usuario.correo
-            usuario_db.contrasenia = usuario.contrasenia
+            usuario_db.rol = usuario.rol
+
             #confirmar los cambios
             db.session.commit()
 
@@ -75,9 +76,11 @@ class UsuarioControlador(Resource):
             print(err)
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
     
-    @jwt_required()
+    @rol_requerido(ADMINISTRADOR)
     def get(self):
         try:
+
+
             #consultar todos los usuario
             usuarios = db.session.execute(db.select(UsuarioModelo)).scalars().all()
 
@@ -90,7 +93,7 @@ class UsuarioControlador(Resource):
 
 class UsuarioPorCodigoControlador(Resource):
 
-    @jwt_required()
+    @rol_requerido(ADMINISTRADOR)
     def get(self, codigo_usuario):
         try:
 
@@ -104,7 +107,7 @@ class UsuarioPorCodigoControlador(Resource):
             print(err)
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
         
-    @jwt_required()
+    @rol_requerido(ADMINISTRADOR)
     def delete(self,codigo_usuario):
         try:
 

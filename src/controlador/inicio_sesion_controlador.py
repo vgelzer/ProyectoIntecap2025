@@ -29,7 +29,10 @@ class InicioSesionControlador(Resource):
                 
 
             #retornanod el token
-            access_token = create_access_token(identity=str( usuario.codigo_usuario))
+            access_token = create_access_token(
+                identity=str( usuario.codigo_usuario),
+                additional_claims={"rol":usuario.rol}
+            )
             return access_token, 200
         except NoResultFound as err:
             return {"mensaje":"El usuario y/o la contraseñ no son correctos"},401 

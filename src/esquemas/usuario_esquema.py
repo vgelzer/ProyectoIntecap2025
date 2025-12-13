@@ -62,3 +62,11 @@ class UsuarioEsquema(ma.SQLAlchemyAutoSchema):
     )
 
 
+    rol = fields.String(
+        required=True, 
+        validate=validate.OneOf(["Administrador","General"]),
+        error_messages ={
+            "required": "El campo es obligatorio."
+            }
+    )
+

@@ -8,5 +8,6 @@ usuario_documentacion = api.model('UsuarioDocumentacion',{
     'nombre': fields.String(required=True,example='Elzer'),
     'apellido': fields.String(required=True,example='Villela'),
     'correo': fields.String(required=True,example='elzervillela@gmail.com'),
-    'contrasenia': fields.String(required=True,example='admin1234')
+    'contrasenia': fields.String(required=True,example='admin1234'),
+    'rol': fields.String(required=True,example='General')
 })
