@@ -10,6 +10,7 @@ from flask_jwt_extended import jwt_required
 from src.modelo.usuario_modelo import UsuarioModelo
 from src.esquemas.usuario_esquema import UsuarioEsquema
 from src.documentacion.usuario_documentacion import usuario_documentacion
+import bcrypt
 
 
 class UsuarioControlador(Resource):
@@ -20,6 +21,16 @@ class UsuarioControlador(Resource):
         try:
             #cargar y validar la informacion del usuario
             usuario = UsuarioEsquema(exclude=['codigo_usuario']).load(request.json)
+
+            #obtiendo la contraseña
+            contrasenia = usuario.contrasenia
+            #convertila a bytes
+            contrasenia_bytes = contrasenia.encode('utf-8')
+            #hashearla
+            hash = bcrypt.hashpw(contrasenia_bytes,bcrypt.gensalt())
+
+            #actualizar el objeto usuario
+            usuario.contrasenia = hash
 
             #insertar el usuario
             db.session.add(usuario)

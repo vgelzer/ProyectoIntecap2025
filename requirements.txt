@@ -1,6 +1,7 @@
 aniso8601==10.0.1
 attrs==25.4.0
 backports-datetime-fromisoformat==2.0.3
+bcrypt==5.0.0
 blinker==1.9.0
 click==8.3.1
 Flask==3.1.2
@@ -19,6 +20,7 @@ marshmallow==4.1.1
 marshmallow-sqlalchemy==1.4.2
 mysqlclient==2.2.7
 PyJWT==2.10.1
+python-dotenv==1.2.1
 referencing==0.37.0
 rpds-py==0.30.0
 SQLAlchemy==2.0.44

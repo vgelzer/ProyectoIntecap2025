@@ -5,6 +5,7 @@ from src.comun.utilidades import api, db
 from flask_jwt_extended import create_access_token
 from src.modelo.usuario_modelo import UsuarioModelo
 from sqlalchemy.orm.exc import NoResultFound
+import bcrypt
 
 
 class InicioSesionControlador(Resource):
@@ -19,9 +20,13 @@ class InicioSesionControlador(Resource):
             #verificar que exista en la db
             usuario = db.session.execute(
                 db.select(UsuarioModelo)
-                .where(UsuarioModelo.correo == correo)
-                .where(UsuarioModelo.contrasenia == contrasenia)).scalar_one()
-
+                .where(UsuarioModelo.correo == correo)).scalar_one()
+            
+            #comparar si la contraseña no es correcta
+            if not bcrypt.checkpw(contrasenia.encode("utf-8"),usuario.contrasenia.encode("utf-8")):
+                #la contrasena es correcta
+                return {"mensaje":"El usuario y/o la contraseñ no son correctos"},401 
+                
 
             #retornanod el token
             access_token = create_access_token(identity=str( usuario.codigo_usuario))
@@ -29,6 +34,7 @@ class InicioSesionControlador(Resource):
         except NoResultFound as err:
             return {"mensaje":"El usuario y/o la contraseñ no son correctos"},401 
         except Exception as err:
+            print(err)
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
 
 
