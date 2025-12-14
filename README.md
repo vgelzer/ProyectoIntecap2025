@@ -79,11 +79,11 @@ flask run
 ## Pruebas
 
 Se debe configurar previamente segun estas variables de entorno
-ENV = Testing
+ENV = prueba
 
 ```
 export FLASK_APP=app.py
-export FLASK_ENV=testing
+export FLASK_ENV=prueba
 export FLASK_DEBUG=0
 export FLASK_RUN_HOST='host'
 export FLASK_RUN_PORT=5000

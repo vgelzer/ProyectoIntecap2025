@@ -150,7 +150,7 @@ class TipoControlador(Resource):
             tipo_json = request.json
 
             #validando la entrada
-            tipo = TipoEsquema().load(tipo_json)
+            tipo = TipoEsquema(transient=True).load(tipo_json)
 
             #actualizando el campo
             tipo_db = db.session.execute(db.select(TipoModelo).where(TipoModelo.codigo_tipo == tipo.codigo_tipo)).scalar_one()
