@@ -8,12 +8,19 @@ from src.documentacion.pokemon_documentacion import pokemon_documentacion
 from src.esquemas.pokemon_esquema import PokemonEsquema
 from src.modelo.pokemon_modelo import PokemonModelo
 from flask_jwt_extended import jwt_required 
+from src.documentacion.error_documentacion import error_documentacion
 
 
 #eliminacion y busqueda por tipo por su codigo tipo
 class PokemonControladorPorCodigoPokemon(Resource):
 
     #select * from table condicion
+    @api.doc(description="Permite actualizar un pokemon")
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(404,'No existe el tipo que se quiere actualizar en la db',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Consulta exitosa', pokemon_documentacion)
     @jwt_required()
     def get(self, codigo_pokemon:int):
         try:
@@ -37,6 +44,12 @@ class PokemonControladorPorCodigoPokemon(Resource):
 
 
     #delete from tabla condicion
+    @api.doc(description="Permite actualizar un pokemon")
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(404,'No existe el tipo que se quiere actualizar en la db',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(204,'Eliminacion exitosa')
     @jwt_required()
     def delete(self, codigo_pokemon:int):
         try:
@@ -64,6 +77,12 @@ class PokemonControladorPorCodigoPokemon(Resource):
 class PokemonControlador(Resource):
 
     #Read
+    @api.doc(description="Permite obtener una lista de pokemons")
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(404,'No existe el tipo que se quiere actualizar en la db',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Consulta exitosa', [pokemon_documentacion])
     @jwt_required()
     def get(self):
         try:
@@ -81,7 +100,14 @@ class PokemonControlador(Resource):
         
     
     #Create
+    
+    @api.doc(description="Permite crear un pokemon")
     @api.expect(pokemon_documentacion)
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(422,'Entidad improcesable',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Creacion exitosa', pokemon_documentacion)
     @jwt_required()
     def post(self):
         try:
@@ -107,7 +133,14 @@ class PokemonControlador(Resource):
         
     
     #Update
+    @api.doc(description="Permite actualizar un tipo")
     @api.expect(pokemon_documentacion)
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(404,'No existe el pokemon que se quiere actualizar en la db',error_documentacion)
+    @api.response(422,'Entidad improcesable',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Actualizacion exitosa', pokemon_documentacion)
     @jwt_required()
     def put(self):
         #objeto y lo validar

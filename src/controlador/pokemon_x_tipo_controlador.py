@@ -10,12 +10,20 @@ from src.modelo.pokemon_x_tipo_modelo import PokemonXTipoModelo
 from src.esquemas.pokemon_x_tipo_esquema import PokemonXTipoEsquema
 from src.documentacion.pokemon_x_tipo_documentacion import pokemon_x_tipo_documentacion
 from flask_jwt_extended import jwt_required
+from src.documentacion.error_documentacion import error_documentacion
 
 
 class PokemonXTipoControlador(Resource):
 
 
+    
+    @api.doc(description="Permite asignar un tipo a un pokemon")
     @api.expect(pokemon_x_tipo_documentacion)
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(422,'Entidad improcesable',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Actualizacion exitosa', pokemon_x_tipo_documentacion)
     @jwt_required()
     def post(self):
         try:
@@ -42,6 +50,12 @@ class PokemonXTipoControlador(Resource):
 
 class PokemonXTipoPorCodigosControlador(Resource):
 
+    @api.doc(description="Permite eliminar un tipo a un pokemon")
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(422,'Entidad improcesable',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(204,'Eliminacion exitosa')
     @jwt_required()
     def delete(self,codigo_pokemon:int, codigo_tipo:int):
         try:

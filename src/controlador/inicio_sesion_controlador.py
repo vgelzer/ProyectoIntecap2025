@@ -6,11 +6,17 @@ from flask_jwt_extended import create_access_token
 from src.modelo.usuario_modelo import UsuarioModelo
 from sqlalchemy.orm.exc import NoResultFound
 import bcrypt
+from src.documentacion.error_documentacion import error_documentacion
 
 
 class InicioSesionControlador(Resource):
 
+    
+    @api.doc(description="Permite autenticarse dentro del sistema")
     @api.expect(inicio_sesion_doc)
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(401,'El usuario y/o contrasenia no son correctos')
+    @api.response(200,'Token de acceso')
     def post(self):
         try:
             #obteniendo las credenciales del usuario
