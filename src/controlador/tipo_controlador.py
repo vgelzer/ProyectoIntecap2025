@@ -8,12 +8,19 @@ from src.comun.utilidades import api
 from src.documentacion.tipo_documentacion import tipo_documentacion
 from marshmallow import ValidationError
 from flask_jwt_extended import jwt_required
+from src.documentacion.error_documentacion import error_documentacion
 
 
 #eliminacion y busqueda por tipo por su codigo tipo
 class TipoControladorPorCodigoTipo(Resource):
 
     #select * from table condicion
+    @api.doc(description="Permite consultar la informacion de un tipos por su codigo tipo")
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(404,'No se encontro el recurso en la base de datos',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Consulta exitosa',tipo_documentacion)
     @jwt_required()
     def get(self, codigo_tipo:int):
         try:
@@ -37,6 +44,12 @@ class TipoControladorPorCodigoTipo(Resource):
 
 
     #delete from tabla condicion
+    @api.doc(description="Permite eliminar la informacion de un tipos por su codigo tipo")
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(404,'No se encontro el recurso que se quiere eliminar en la base de datos',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(204,'Eliminación exitosa')
     @jwt_required()
     def delete(self, codigo_tipo:int):
         try:
@@ -64,6 +77,11 @@ class TipoControladorPorCodigoTipo(Resource):
 class TipoControlador(Resource):
 
     #Read
+    @api.doc(description="Permite obtener una lista de tipos")
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Consulta exitosa', [tipo_documentacion])
     @jwt_required()
     def get(self):
         try:
@@ -81,7 +99,13 @@ class TipoControlador(Resource):
         
     
     #Create
+    @api.doc(description="Permite crear un tipo")
     @api.expect(tipo_documentacion)
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(422,'Entidad improcesable',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Creacion exitosa', tipo_documentacion)
     @jwt_required()
     def post(self):
         try:
@@ -109,7 +133,14 @@ class TipoControlador(Resource):
         
     
     #Update
+    @api.doc(description="Permite actualizar un tipo")
     @api.expect(tipo_documentacion)
+    @api.response(503,'Error en la consulta del servidor, consulte logs',error_documentacion)
+    @api.response(404,'No existe el tipo que se quiere actualizar en la db',error_documentacion)
+    @api.response(422,'Entidad improcesable',error_documentacion)
+    @api.response(403,'No cuenta con los permisos necesarios para realizar esta accion')
+    @api.response(401,'No tiene autorizacion')
+    @api.response(200,'Actualizacion exitosa', tipo_documentacion)
     @jwt_required()
     def put(self):
         #objeto y lo validar
